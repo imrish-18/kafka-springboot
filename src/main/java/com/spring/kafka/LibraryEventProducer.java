@@ -13,9 +13,13 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.header.Header;
+
+import org.apache.kafka.common.header.internals.RecordHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,9 +87,10 @@ public class LibraryEventProducer {
 	 * Send library event asysn.
 	 *
 	 * @param event the event
+	 * @return 
 	 * @throws JsonProcessingException the json processing exception
 	 */
-	public void SendLibraryEventAsysn(LibraryEvent event) throws JsonProcessingException
+	public ListenableFuture<SendResult<Integer, String>> SendLibraryEventAsysn(LibraryEvent event) throws JsonProcessingException
 	{
 		Integer key=event.getLibraryEventId();
 		String value=mapper.writeValueAsString(event);
@@ -112,6 +117,8 @@ public class LibraryEventProducer {
 			}
 			
 		});
+		
+		return listenableFuture;
 	}
 	
       /**
@@ -123,7 +130,10 @@ public class LibraryEventProducer {
        * @return the producer record
        */
       ProducerRecord<Integer, String>	buildProducerRecord(Integer key,String value,String topic){
-		return new ProducerRecord<Integer, String>(topic,null,key, value,null);
+    	  
+    	 
+    	  List<Header> recordsHeaders=List.of(new RecordHeader("event-source","scanner".getBytes()));
+		return new ProducerRecord<Integer, String>(topic, null,key, value, recordsHeaders);
 	}
 	
 	/**

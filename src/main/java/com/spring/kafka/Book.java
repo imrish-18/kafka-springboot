@@ -1,5 +1,10 @@
 package com.spring.kafka;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.lang.NonNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,12 +26,15 @@ public class Book {
 
 	
 	/** The book id. */
+	@NotNull
 	private Integer book_Id;
 	
 	/** The book name. */
+	 @NotBlank
 	private String book_Name;
 	
 	/** The book author. */
+	 @NotBlank
 	private String book_Author;
 	
 	/**

@@ -1,5 +1,7 @@
 package com.spring.kafka;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +25,7 @@ public class LibraryEvent {
 	private Integer libraryEventId;
 	
 	/** The book. */
+	@NotNull
 	private Book book;
 	
 	/**
